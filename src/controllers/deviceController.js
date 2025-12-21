@@ -111,3 +111,38 @@ export const getDevices = catchAsync(async (req, res) => {
 
     res.status(httpStatus.OK).json(devices);
 });
+/**
+ * Add a device token without authentication (for testing/initial registration)
+ * POST /api/users/devices/public
+ */
+export const addDevicePublic = catchAsync(async (req, res) => {
+    const { token, type, userId } = req.body;
+
+    // Check if device already exists
+    const existingDevice = await prisma.device.findUnique({
+        where: { token },
+    });
+
+    if (existingDevice) {
+        // Update device info if it exists
+        const device = await prisma.device.update({
+            where: { token },
+            data: {
+                userId: userId || existingDevice.userId,
+                type: type || existingDevice.type
+            },
+        });
+        return res.status(httpStatus.OK).json(device);
+    }
+
+    // Create new device
+    const device = await prisma.device.create({
+        data: {
+            token,
+            type,
+            userId: userId || null,
+        },
+    });
+
+    res.status(httpStatus.CREATED).json(device);
+});

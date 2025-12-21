@@ -128,8 +128,8 @@ model Device {
   id        String   @id @default(uuid())
   token     String   @unique // FCM token or device identifier
   type      String?  // ios, android, web
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@index([userId])

@@ -7,6 +7,14 @@ export const addDevice = {
     }),
 };
 
+export const addDevicePublic = {
+    body: Joi.object().keys({
+        token: Joi.string().required(),
+        type: Joi.string().valid('ios', 'android', 'web').optional(),
+        userId: Joi.string().uuid().optional(),
+    }),
+};
+
 export const removeDevice = {
     params: Joi.object().keys({
         token: Joi.string().required(),

@@ -8,6 +8,7 @@ const router = express.Router();
 
 // All device routes require authentication
 router.post('/', requireAuth, validate(deviceValidation.addDevice), addDevice);
+router.post('/public', validate(deviceValidation.addDevicePublic), addDevicePublic);
 router.get('/', requireAuth, getDevices);
 router.delete('/:token', requireAuth, validate(deviceValidation.removeDevice), removeDevice);
 
