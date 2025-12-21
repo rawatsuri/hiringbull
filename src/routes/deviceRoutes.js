@@ -2,7 +2,7 @@ import express from 'express';
 import validate from '../middlewares/validate.js';
 import * as deviceValidation from '../validations/deviceValidation.js';
 import { requireAuth } from '../middlewares/auth.js';
-import { addDevice, removeDevice, getDevices } from '../controllers/deviceController.js';
+import { addDevice, removeDevice, getDevices, addDevicePublic } from '../controllers/deviceController.js';
 
 const router = express.Router();
 
