@@ -27,7 +27,7 @@ app.use(morgan("dev"));
 
 
 // Rate limiting
-app.use(defaultLimiter);
+// app.use(defaultLimiter);
 app.set("trust proxy", 1);
 
 // Clerk authentication (populates req.auth)
