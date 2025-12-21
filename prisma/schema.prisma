@@ -1,0 +1,137 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(uuid())
+  clerkId            String?   @unique // Clerk user ID for auth sync
+  name               String
+  img_url            String?
+  email              String    @unique
+  active             Boolean   @default(true)
+  is_experienced     Boolean   @default(false)
+  college_name       String? 
+  cgpa               String?
+  company_name       String?
+  years_of_experience Int?
+  resume_link        String?
+  segment            String?
+  promo_code         String?   @unique
+  promo_code_used    String?
+  tokens_left        Int?      @default(3)
+  tokens_last_update DateTime?
+  total_paid         Float?    @default(0)
+  last_paid          Float?
+  current_plan_start DateTime?
+  current_plan_end   DateTime?
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  expiry             DateTime?
+  isPaid             Boolean   @default(false)
+  planExpiry         DateTime?
+  payments           Payment[]
+  comments           Comment[]
+  followedCompanies  Company[]
+  devices            Device[]
+
+  @@index([email])
+  @@index([clerkId])
+  @@index([segment])
+}
+
+model Company {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  logo        String?
+  description String?
+  category    String?  // "global_mnc", "global_startup", "indian_startup"
+  users       User[]
+  jobs        Job[]
+  createdAt   DateTime @default(now())
+
+  @@index([category])
+  @@index([name])
+}
+
+model Job {
+  id              String   @id @default(uuid())
+  company         String
+  companyId       String?
+  companyRel      Company? @relation(fields: [companyId], references: [id])
+  segment         String?
+  title           String
+  careerpage_link String?
+  company_id      String?
+  created_at      DateTime @default(now())
+  created_by      String?
+
+  @@index([segment])
+  @@index([companyId])
+  @@index([created_at])
+}
+
+model SocialPost {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  segment     String?
+  company     String?
+  source      String?  // "linkedin", "reddit", "twitter", "direct"
+  source_link String?
+  image_link  String?
+  created_at  DateTime @default(now())
+  created_by  String?
+  comments    Comment[]
+
+  @@index([source])
+  @@index([segment])
+  @@index([created_at])
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  orderId   String
+  paymentId String?
+  signature String?
+  amount    Float
+  status    String   @default("PENDING") // PENDING, SUCCESS, FAILED
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([orderId])
+}
+
+model Comment {
+  id        String     @id @default(uuid())
+  content   String
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  postId    String
+  post      SocialPost @relation(fields: [postId], references: [id])
+  createdAt DateTime   @default(now())
+
+  @@index([userId])
+  @@index([postId])
+}
+
+model Device {
+  id        String   @id @default(uuid())
+  token     String   @unique // FCM token or device identifier
+  type      String?  // ios, android, web
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}

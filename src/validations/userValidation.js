@@ -1,0 +1,53 @@
+import Joi from 'joi';
+
+export const createUser = {
+    body: Joi.object().keys({
+        name: Joi.string().required(),
+        email: Joi.string().required().email(),
+        img_url: Joi.string().uri().allow(null, ''),
+        active: Joi.boolean(),
+        is_experienced: Joi.boolean(),
+        college_name: Joi.string().allow(null, ''),
+        cgpa: Joi.string().allow(null, ''),
+        company_name: Joi.string().allow(null, ''),
+        years_of_experience: Joi.number().integer().allow(null),
+        resume_link: Joi.string().uri().allow(null, ''),
+        segment: Joi.string().allow(null, ''),
+        companies: Joi.array().items(Joi.string()),
+        clerkId: Joi.string().allow(null, ''), // Allow passing Clerk ID for testing/sync
+        promo_code: Joi.string().allow(null, ''), // Assuming this is passed or generated
+    }),
+};
+
+export const getUser = {
+    params: Joi.object().keys({
+        id: Joi.string().uuid().required(),
+    }),
+};
+
+export const updateUser = {
+    params: Joi.object().keys({
+        id: Joi.string().uuid().required(),
+    }),
+    body: Joi.object().keys({
+        name: Joi.string(),
+        email: Joi.string().email(),
+        img_url: Joi.string().uri().allow(null, ''),
+        active: Joi.boolean(),
+        is_experienced: Joi.boolean(),
+        college_name: Joi.string().allow(null, ''),
+        cgpa: Joi.string().allow(null, ''),
+        company_name: Joi.string().allow(null, ''),
+        years_of_experience: Joi.number().integer().allow(null),
+        resume_link: Joi.string().uri().allow(null, ''),
+        segment: Joi.string().allow(null, ''),
+        companies: Joi.array().items(Joi.string().uuid()),
+        promo_code: Joi.string().allow(null, ''),
+    }).min(1),
+};
+
+export const deleteUser = {
+    params: Joi.object().keys({
+        id: Joi.string().uuid().required(),
+    }),
+};
