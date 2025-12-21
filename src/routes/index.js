@@ -6,6 +6,7 @@ import paymentRoutes from './paymentRoutes.js';
 import companyRoutes from './companyRoutes.js';
 import deviceRoutes from './deviceRoutes.js';
 import webhookRoutes from './webhookRoutes.js';
+import testingRoutes from './testing.js';
 
 const router = express.Router();
 
@@ -16,7 +17,6 @@ router.use('/social-posts', socialPostRoutes);
 router.use('/payment', paymentRoutes);
 router.use('/companies', companyRoutes);
 router.use('/webhooks', webhookRoutes);
+router.use('/public', testingRoutes);
 
 export default router;
-
-
