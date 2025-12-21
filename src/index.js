@@ -25,8 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+
 // Rate limiting
 app.use(defaultLimiter);
+app.set("trust proxy", 1);
 
 // Clerk authentication (populates req.auth)
 // Wrap initClerk to skip if keys are missing
